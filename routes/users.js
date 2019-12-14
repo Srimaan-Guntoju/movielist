@@ -7,7 +7,9 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 
 
-var User = require('../models/users')
+const User = require('../models/users')
+const MovieList= require('../models/usermovielist')
+
 
 
 router.post('/signup',[
@@ -143,9 +145,45 @@ router.post('/login',[
 	])
 
 router.get("/mylist",checkAuth,(req,res,next)=>{
-	res.status(200).json({
-		message:"my list of movies"
+	MovieList.find({user_id: req.userData.userId})
+		.exec()
+		.then(list=>{
+			if(list.length<1){
+				res.status(404).json({
+					message:"No movies are added to your list"
+				})
+			}
+			res.status(200).json({
+				movie_list: list
+			})
+		})
+	// res.status(200).json({
+	// 	message:"my list of movies"
+	// })
+})
+
+router.post("/mylist",checkAuth,(req,res,next)=>{
+	/*
+	1. get user id
+	2. get movie id
+	3. store user id, movie_id, imdb_id, watch_status, user_rating
+	{watch_status:[watching, completed, on-hold, dropped, plan to watch]}
+	*/
+	console.log(req.userData)
+	const movielist= new MovieList({
+		user_id: req.userData.userId,
+		movie_id:req.body.movie_id ,
+		imdb_id: req.body.imdb_id,
+		watch_status: req.body.watch_status ,
+		user_rating: req.body.user_rating
 	})
+	movielist.save()
+		.then(result=>{
+			console.log(result)
+			res.status(201).json({
+				message:"movie list item added"
+			})
+		})
 })
 
 module.exports = router;
