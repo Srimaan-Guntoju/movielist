@@ -4,13 +4,17 @@
 
 .movie-list{
   display: flex;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+  justify-content: center;
 }
 
 .Movie-card{
 /*  background-color: black;
 */  width: 240px;
   height: 355px;
-  padding: 0px 15px;
+  padding:15px;
 }
 
 .card-hiddeninfo{
@@ -21,9 +25,9 @@
   top: 0;
   left: 0;
   font-size: 30px;
-  padding-top: 15px;
-  height: 330px;
-  width: 230px;
+  padding: 15px;
+  height: 315px;
+  width: 200px;
   color: white;
 }
 

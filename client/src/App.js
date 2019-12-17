@@ -1,20 +1,25 @@
-import React, { Component } from 'react';
 import './App.css';
+import React from 'react'
 
-class App extends Component {
-state = {
-    data: null
-  };
+
+class App extends React.Component{
+  constructor(props){
+    super(props)
+    this.state={moviedata:null}
+  }
 
   componentDidMount() {
-      // Call our fetch function below once the component mounts
-    this.callBackendAPI()
-      .then(res => this.setState({ data: res.express }))
-      .catch(err => console.log(err));
+      console.log('alpha')
+        // Call our fetch function below once the component mounts
+      this.callBackendAPI()
+        .then(res => {
+          this.setState({ moviedata: res.data})
+        })
+        .catch(err => console.log(err));
   }
-    // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
+
   callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
+    const response = await fetch('https://yts.lt/api/v2/list_movies.json?limit=20&with_rt_ratings=true&sort_by=date_added');
     const body = await response.json();
 
     if (response.status !== 200) {
@@ -24,29 +29,44 @@ state = {
   };
 
   render() {
+    const moviedata=this.state.moviedata;
+    if(!moviedata) {return null;}
+    console.log(moviedata.limit)
     return (
       <div className="App">
-        <p className="App-intro">{this.state.data}</p>
-        <div className="movie-list">
-          <MovieCard />
-          <MovieCard />
-          <MovieCard />
-        </div>
+         <h1>Movie List</h1>
+        <MovieList list={moviedata.movies}/>
       </div>
     );
   }
 }
 
-function MovieCard(){
+function MovieList(props){
+  console.log(props.list)
+  return (
+    <div className="movie-list">  
+      {
+        props.list.map(item=>
+          <MovieCard details={item}/>)
+      } 
+        
+        </div>
+    )
+}
+
+function MovieCard(props){
+  console.log(props.details)
+  const movie=props.details
   return(
     <div className="Movie-card">
-          <a href="https://yts.lt/movie/garlic-gunpowder-2017">
+          <a href={movie.url}>
           <figure>
-            <img src= {"https://yts.lt/assets/images/movies/garlic_gunpowder_2017/medium-cover.jpg"}
-              alt="Garlic & Gunpowder" className="card-img"/>
+            <img src= {movie.medium_cover_image}
+              alt={movie.title_long} className="card-img"/>
             <figcaption className="card-hiddeninfo">
-            <h4>Garlic & Gunpowder</h4>
-            <h4>5.1/10</h4>
+            <p>{movie.title}</p>
+            <p>{movie.year}</p>
+            <p>{movie.rating}/10</p>
             <span class="button-green-download">View Details</span>
             </figcaption>
           </figure>
@@ -57,4 +77,3 @@ function MovieCard(){
 }
 
 export default App;
-
