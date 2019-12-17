@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -27,15 +26,34 @@ state = {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        // Render the newly fetched data inside of this.state.data 
         <p className="App-intro">{this.state.data}</p>
+        <div className="movie-list">
+          <MovieCard />
+          <MovieCard />
+          <MovieCard />
+        </div>
       </div>
     );
   }
+}
+
+function MovieCard(){
+  return(
+    <div className="Movie-card">
+          <a href="https://yts.lt/movie/garlic-gunpowder-2017">
+          <figure>
+            <img src= {"https://yts.lt/assets/images/movies/garlic_gunpowder_2017/medium-cover.jpg"}
+              alt="Garlic & Gunpowder" className="card-img"/>
+            <figcaption className="card-hiddeninfo">
+            <h4>Garlic & Gunpowder</h4>
+            <h4>5.1/10</h4>
+            <span class="button-green-download">View Details</span>
+            </figcaption>
+          </figure>
+          </a>
+     
+        </div>
+    )
 }
 
 export default App;
